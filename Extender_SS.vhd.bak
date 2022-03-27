@@ -1,0 +1,19 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+
+ENTITY Extender_SS IS
+PORT
+	(
+		CLOCK				: IN std_logic;
+		extender_in		: IN std_logic;
+		extender_en		: IN std_logic;
+		state_input		: IN std_logic_vector(3 downto 0);
+		
+		extender_out	: OUT std_logic := '0';
+		clk_en 			: OUT std_logic;
+		left_right		: OUT std_logic;
+		grappler_en		: OUT std_logic := '0'
+	);
+END ENTITY Extender_SS;
