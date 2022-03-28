@@ -45,11 +45,15 @@ BEGIN
 	if (extender_out = '0') then
 		
 		if (X_GT = '1') then
-			clk_en_X <= '1';
 			up_down_X <= '0';
-		elsif (X_LT = '1') then
 			clk_en_X <= '1';
+			clk_en_X <= '0';
+			
+		elsif (X_LT = '1') then
 			up_down_X <= '1';
+			clk_en_X <= '1';
+			clk_en_X <= '0';
+			
 		elsif (X_EQ = '1') then
 			clk_en_X <= '0';
 
@@ -66,11 +70,15 @@ BEGIN
 	if (extender_out = '0') then
 		
 		if (Y_GT = '1') then
-			clk_en_Y <= '1';
 			up_down_Y <= '0';
-		elsif (Y_LT = '1') then
 			clk_en_Y <= '1';
+			clk_en_Y <= '0';
+			
+		elsif (Y_LT = '1') then
 			up_down_Y <= '1';
+			clk_en_Y <= '1';
+			clk_en_Y <= '0';
+			
 		elsif (Y_EQ = '1') then
 			clk_en_Y <= '0';
 		end if;
