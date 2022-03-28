@@ -114,8 +114,8 @@ end component Bidir_shift_reg;
 COMPONENT XY_Motion_SM
 PORT
 	(
-		clk, reset, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out							: IN std_logic;
-		clk_en_X, clk_en_Y, up_down_X, up_down_Y, error, Capture_XY, extender_en	: OUT std_logic := '0'
+		clk_in, reset, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out							: IN std_logic;
+		clk_en_X, clk_en_Y, up_down_X, up_down_Y, err, Capture_XY, extender_en	: OUT std_logic := '0'
 	);
 END COMPONENT XY_Motion_SM;
 
@@ -313,6 +313,8 @@ SevenSegMux			: segment7_mux 		 PORT MAP (clk_in, X_sevenseg_out, Y_sevenseg_out
 leds(5 downto 2) <= ext_pos;
 leds(0) <= error;
 leds(1) <= grappler_on;
+
+
 
 
 
