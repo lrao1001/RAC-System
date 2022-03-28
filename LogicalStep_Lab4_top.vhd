@@ -111,13 +111,13 @@ end component Bidir_shift_reg;
 
 -- Component 5
 -- XY Motion
-COMPONENT XY_motion 
+COMPONENT XY_Motion_SM
 PORT
 	(
-		X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out							: IN std_logic;
+		clk, reset, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out							: IN std_logic;
 		clk_en_X, clk_en_Y, up_down_X, up_down_Y, error, Capture_XY, extender_en	: OUT std_logic := '0'
 	);
-END COMPONENT XY_motion;
+END COMPONENT XY_Motion_SM;
 
 
 -- Component 6
@@ -276,11 +276,11 @@ Extender1			: Extender_SS			 PORT MAP (clk_in, RESET, extender_INPUT, extender_e
 Reg4					: Bidir_shift_reg		 PORT MAP (clk_in, RESET, clk_en_reg4, left_right, ext_pos);
 
 -- XY Motion
-XY_Motion1			: XY_motion				 PORT MAP (X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
+XY_Motion1			: XY_Motion_SM			 PORT MAP (clk_in, RESET, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
 											 clk_en_X, clk_en_Y, up_down_X, up_down_Y, error, Capture_XY, extender_en);
 											 
 -- Grappler
-Grappler1			: Grappler				 PORT MAP (clock, RESET, grappler_INPUT, grappler_en, grappler_on);
+Grappler1			: Grappler				 PORT MAP (clk_in, RESET, grappler_INPUT, grappler_en, grappler_on);
 
 -- X Counter
 X_counter			: U_D_Bin_Counter4bit PORT MAP (clk_in, RESET, clk_en_X, up_down_X, X_pos);
@@ -316,37 +316,7 @@ leds(1) <= grappler_on;
 
 
 
-
-
 END Circuit;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
