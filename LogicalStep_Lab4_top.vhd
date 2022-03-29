@@ -111,13 +111,14 @@ end component Bidir_shift_reg;
 
 -- Component 5
 -- XY Motion
-COMPONENT XY_Motion_SM
+COMPONENT XY_motion_final
 PORT
 	(
-		clk_in, reset, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out							: IN std_logic;
-		clk_en_X, clk_en_Y, up_down_X, up_down_Y, err, Capture_XY, extender_en	: OUT std_logic := '0'
+		clk_in, reset, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out	: IN std_logic;
+		up_down_X, up_down_Y, err, Capture_XY, extender_en	: OUT std_logic;
+		clk_en_X, clk_en_Y : OUT std_logic := '0'
 	);
-END COMPONENT XY_Motion_SM;
+END COMPONENT XY_motion_final;
 
 
 -- Component 6
@@ -276,8 +277,8 @@ Extender1			: Extender_SS			 PORT MAP (clk_in, RESET, extender_INPUT, extender_e
 Reg4					: Bidir_shift_reg		 PORT MAP (clk_in, RESET, clk_en_reg4, left_right, ext_pos);
 
 -- XY Motion
-XY_Motion1			: XY_Motion_SM			 PORT MAP (clk_in, RESET, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
-											 clk_en_X, clk_en_Y, up_down_X, up_down_Y, error, Capture_XY, extender_en);
+XY_Motion1			: XY_motion_final		 PORT MAP (clk_in, RESET, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
+																	up_down_X, up_down_Y, error, Capture_XY, extender_en, clk_en_X, clk_en_Y);
 											 
 -- Grappler
 Grappler1			: Grappler				 PORT MAP (clk_in, RESET, grappler_INPUT, grappler_en, grappler_on);
