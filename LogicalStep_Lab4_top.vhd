@@ -271,27 +271,27 @@ Clock_Selector		: Clock_source 		 PORT MAP (SIM_FLAG, clk_in, clock);
 Inverter1			: Inverter				 PORT MAP (pb_n(3), pb_n(2), pb_n(1), pb_n(0), RESET, motion, extender_INPUT, grappler_INPUT);
 
 -- Extender
-Extender1			: Extender_SS			 PORT MAP (clk_in, RESET, extender_INPUT, extender_en, ext_pos, extender_out, clk_en_reg4, left_right, grappler_en);
+Extender1			: Extender_SS			 PORT MAP (clock, RESET, extender_INPUT, extender_en, ext_pos, extender_out, clk_en_reg4, left_right, grappler_en);
 
 -- Reg4
-Reg4					: Bidir_shift_reg		 PORT MAP (clk_in, RESET, clk_en_reg4, left_right, ext_pos);
+Reg4					: Bidir_shift_reg		 PORT MAP (clock, RESET, clk_en_reg4, left_right, ext_pos);
 
 -- XY Motion
-XY_Motion1			: XY_motion_final		 PORT MAP (clk_in, RESET, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
+XY_Motion1			: XY_motion_final		 PORT MAP (clock, RESET, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
 																	up_down_X, up_down_Y, error, Capture_XY, extender_en, clk_en_X, clk_en_Y);
 											 
 -- Grappler
-Grappler1			: Grappler				 PORT MAP (clk_in, RESET, grappler_INPUT, grappler_en, grappler_on);
+Grappler1			: Grappler				 PORT MAP (clock, RESET, grappler_INPUT, grappler_en, grappler_on);
 
 -- X Counter
-X_counter			: U_D_Bin_Counter4bit PORT MAP (clk_in, RESET, clk_en_X, up_down_X, X_pos);
+X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_X, up_down_X, X_pos);
 -- X Register (Target X)
-X_register			: register_normal 	 PORT MAP (clk_in, Capture_XY, RESET, X_target, X_reg);
+X_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, X_target, X_reg);
 
 -- Y Counter
-Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clk_in, RESET, clk_en_Y, up_down_Y, Y_pos);
+Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_Y, up_down_Y, Y_pos);
 -- Y Register (Target Y)
-Y_register			: register_normal 	 PORT MAP (clk_in, Capture_XY, RESET, Y_target, Y_reg);
+Y_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, Y_target, Y_reg);
 
 -- X 4-Bit Comparator
 X_4bitComparator	: compx4 				 PORT MAP (X_pos, X_reg, X_GT, X_EQ, X_LT);
@@ -320,6 +320,3 @@ leds(1) <= grappler_on;
 
 
 END Circuit;
-
-
-
