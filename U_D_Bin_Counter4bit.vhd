@@ -10,7 +10,8 @@ PORT
 	RESET				: IN std_logic := '0';
 	CLK_EN			: IN std_logic := '0';
 	UP1_DOWN0		: IN std_logic := '0';
-	COUNTER_BITS	: OUT std_logic_vector(3 downto 0)
+	COUNTER_BITS	: OUT std_logic_vector(3 downto 0);
+	SIM_OUTPUTS    : OUT std_logic_vector(3 downto 0)
 );
 
 END ENTITY;
@@ -21,8 +22,8 @@ signal ud_bin_counter	: UNSIGNED (3 downto 0);
 
 BEGIN
 
--- process (CLK, CLK_EN, RESET_n, UP1_DOWN0) IS
-PROCESS (CLK, RESET) IS
+process (CLK, CLK_EN,UP1_DOWN0,RESET) IS
+--PROCESS (CLK, RESET) IS
 BEGIN
 	if (RESET = '1') THEN
 		ud_bin_counter <= "0000";
@@ -39,6 +40,7 @@ BEGIN
 	end if;
 	
 	COUNTER_BITS <= std_logic_vector(ud_bin_counter);
+	SIM_OUTPUTS <= std_logic_vector(ud_bin_counter);
 
 END PROCESS;
 
