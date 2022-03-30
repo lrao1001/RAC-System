@@ -141,9 +141,9 @@ END COMPONENT U_D_Bin_Counter4bit;
 COMPONENT register_normal
 PORT
 	(
-		clk 			: IN std_logic := '0';
-		capture 		: IN std_logic := '0';
-		RESET			: IN std_logic := '0';
+		clk 			: IN std_logic;
+		capture 		: IN std_logic;
+		RESET			: IN std_logic ;
 		input_data 	: IN std_logic_vector(3 downto 0);
 		reg_bits 	: OUT std_logic_vector(3 downto 0);
 		sim_output 	: OUT std_logic_vector(3 downto 0)
@@ -270,7 +270,7 @@ Y_target <= sw(3 downto 0);
 Clock_Selector		: Clock_source 		 PORT MAP (SIM_FLAG, clk_in, clock);
 
 -- Inverter
-Inverter1			: Inverter				 PORT MAP (pb_n(3), pb_n(2), pb_n(1), pb_n(0), RESET, motion, extender_INPUT, grappler_INPUT);
+Inverter1			: Inverter				 PORT MAP ('1', pb_n(2), pb_n(1), pb_n(0), RESET, motion, extender_INPUT, grappler_INPUT);
 
 -- Extender
 Extender1			: Extender_SS			 PORT MAP (clock, RESET, extender_INPUT, extender_en, ext_pos, extender_out, clk_en_reg4, left_right, grappler_en);
