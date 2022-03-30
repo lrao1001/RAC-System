@@ -48,7 +48,7 @@ BEGIN
 	
 		when START =>
 		
-			if (motion = '0' AND X_EQ = '0' AND Y_EQ = '0') then
+			if (NOT(motion) AND  ) then
 				next_state <= MOVING;
 			
 			elsif (motion = '0' AND X_EQ = '1' AND Y_EQ = '1') then
@@ -127,7 +127,7 @@ BEGIN
 				clk_en_X <= '0';
 				extender_en <= '0';
 				Capture_XY <= '0';
-				
+				up_down_X <= '0';
 			elsif (X_GT = '1') then
 				up_down_X <= '1';
 				extender_en <= '0';
