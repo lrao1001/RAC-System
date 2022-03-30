@@ -130,7 +130,8 @@ PORT
 		RESET				: IN std_logic := '0';
 		CLK_EN			: IN std_logic := '0';
 		UP1_DOWN0		: IN std_logic := '0';
-		COUNTER_BITS	: OUT std_logic_vector(3 downto 0)
+		COUNTER_BITS	: OUT std_logic_vector(3 downto 0);
+		SIM_OUTPUTS    : OUT std_logic_vector(3 downto 0)
 	);
 END COMPONENT U_D_Bin_Counter4bit;
 
@@ -144,7 +145,8 @@ PORT
 		capture 		: IN std_logic := '0';
 		RESET			: IN std_logic := '0';
 		input_data 	: IN std_logic_vector(3 downto 0);
-		reg_bits 	: OUT std_logic_vector(3 downto 0)
+		reg_bits 	: OUT std_logic_vector(3 downto 0);
+		sim_output 	: OUT std_logic_vector(3 downto 0)
 	);
 END COMPONENT register_normal;
 
@@ -284,14 +286,14 @@ XY_Motion1			: XY_motion_final		 PORT MAP (clock, RESET, X_GT, X_EQ, X_LT, motio
 Grappler1			: Grappler				 PORT MAP (clock, RESET, grappler_INPUT, grappler_en, grappler_on);
 
 -- X Counter
-X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_X, up_down_X, X_pos);
+X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_X, up_down_X, X_pos, xPOS);
 -- X Register (Target X)
-X_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, X_target, X_reg);
+X_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, X_target, X_reg,Xreg);
 
 -- Y Counter
-Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_Y, up_down_Y, Y_pos);
+Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_Y, up_down_Y, Y_pos, yPOS);
 -- Y Register (Target Y)
-Y_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, Y_target, Y_reg);
+Y_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, Y_target, Y_reg, Yreg);
 
 -- X 4-Bit Comparator
 X_4bitComparator	: compx4 				 PORT MAP (X_pos, X_reg, X_GT, X_EQ, X_LT);
@@ -306,7 +308,7 @@ X_SevenSegment		: SevenSegment 		 PORT MAP (X_pos, X_sevenseg_out);
 Y_SevenSegment		: SevenSegment 		 PORT MAP (Y_pos, Y_sevenseg_out);
 
 -- Seven Segment Multiplexer
-SevenSegMux			: segment7_mux 		 PORT MAP (clk_in, X_sevenseg_out, Y_sevenseg_out, seg7_data, seg7_char1, seg7_char2);
+SevenSegMux			: segment7_mux 		 PORT MAP (clock, X_sevenseg_out, Y_sevenseg_out, seg7_data, seg7_char1, seg7_char2);
 -- _______________________________________________________________________________________________________
 
 
