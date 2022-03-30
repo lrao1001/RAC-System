@@ -10,7 +10,8 @@ PORT
 		capture 		: IN std_logic := '0';
 		RESET			: IN std_logic := '0';
 		input_data 	: IN std_logic_vector(3 downto 0);
-		reg_bits 	: OUT std_logic_vector(3 downto 0)
+		reg_bits 	: OUT std_logic_vector(3 downto 0);
+		sim_output 	: OUT std_logic_vector(3 downto 0)
 	);
 END ENTITY register_normal;
 
@@ -32,6 +33,7 @@ begin
 	end if;
 
 	reg_bits <= reg_container;
+	sim_output <= reg_container;
 
 END PROCESS;
 
