@@ -4,11 +4,11 @@ USE ieee.numeric_std.ALL;
 
 ENTITY grappler IS
 PORT
-	(	clk			: IN std_logic;
-		RESET			: IN std_logic;
+	(	clk			: IN std_logic := '0';
+		RESET			: IN std_logic := '0';
 		grappler_in	: IN std_logic;
-		grappler_en		: IN std_logic;
-		grappler_on  : OUT std_logic
+		grappler_en	: IN std_logic;
+		grappler_on : OUT std_logic
 
 	);
 END ENTITY grappler;
@@ -24,7 +24,7 @@ BEGIN
 --Register Logic
 Register_Section: PROCESS (clk, RESET, next_state) 
 	BEGIN
-	IF (reset = '0') THEN --note that reset is active-low (input gets inverted)
+	IF (reset = '1') THEN 
 		current_state <= D;
 	ELSIF(rising_edge(clk)) THEN
 		current_state <= next_state; --if not async reset, next state becomes current state
@@ -60,8 +60,7 @@ Transition_Section: PROCESS (grappler_en, grappler_in,current_state)
 		ELSE
 			next_state <= O;
 		END IF;
-		WHEN OTHERS =>
-		next_state <= D; --this should never run. but just in case...
+
 	END CASE;
 END PROCESS;
 
@@ -73,7 +72,7 @@ BEGIN
 	IF (current_state = D) THEN
 		grappler_on <= '0';
 		
-	ELSIF (current_state = c) THEN
+	ELSIF (current_state = C) THEN
 		grappler_on <= '0';
 		
 	ELSIF (current_state = O) THEN
@@ -84,10 +83,6 @@ BEGIN
 END PROCESS;
 	
 END;
-	
-	
-	
-	
 	
 	
 	
