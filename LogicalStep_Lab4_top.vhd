@@ -5,18 +5,18 @@ USE ieee.numeric_std.ALL;
 ENTITY LogicalStep_Lab4_top IS
    PORT
 	(
-	Clk			: in	std_logic;
-	pb_n			: in	std_logic_vector(3 downto 0);
- 	sw   			: in  std_logic_vector(7 downto 0); 
-	leds			: out std_logic_vector(7 downto 0);
+		Clk			: in	std_logic;
+		pb_n			: in	std_logic_vector(3 downto 0);
+		sw   			: in  std_logic_vector(7 downto 0); 
+		leds			: out std_logic_vector(7 downto 0);
 
-------------------------------------------------------------------	
-	xreg, yreg	: out std_logic_vector(3 downto 0);-- (for SIMULATION only)
-	xPOS, yPOS	: out std_logic_vector(3 downto 0);-- (for SIMULATION only)
-------------------------------------------------------------------	
-   seg7_data 	: out std_logic_vector(6 downto 0); -- 7-bit outputs to a 7-segment display (for LogicalStep only)
-	seg7_char1  : out	std_logic;				    		-- seg7 digit1 selector (for LogicalStep only)
-	seg7_char2  : out	std_logic				    		-- seg7 digit2 selector (for LogicalStep only)
+	------------------------------------------------------------------	
+		xreg, yreg	: out std_logic_vector(3 downto 0);-- (for SIMULATION only)
+		xPOS, yPOS	: out std_logic_vector(3 downto 0);-- (for SIMULATION only)
+	------------------------------------------------------------------	
+		seg7_data 	: out std_logic_vector(6 downto 0); -- 7-bit outputs to a 7-segment display (for LogicalStep only)
+		seg7_char1  : out	std_logic;				    		-- seg7 digit1 selector (for LogicalStep only)
+		seg7_char2  : out	std_logic				    		-- seg7 digit2 selector (for LogicalStep only)
 	
 	);
 END LogicalStep_Lab4_top;
@@ -67,8 +67,8 @@ END COMPONENT Inverter;
 COMPONENT Grappler
 PORT 
 	(
-		clk			 : IN std_logic;
-		reset 		 : IN std_logic;
+		clk			 : IN std_logic := '0';
+		reset 		 : IN std_logic := '0';
 		grappler_in	 : IN std_logic;
 		grappler_en	 : IN std_logic;
 		grappler_on  : OUT std_logic
@@ -77,22 +77,27 @@ END COMPONENT Grappler;
 
 
 -- Component 3
--- Extender
-COMPONENT Extender_SS
+
+--Component extendersm
+--port
+--(
+--	clk, reset, extenderbut, extender_en		: in std_logic;
+--	extender_out, grappler_en, clk_en, sider	: out std_logic
+--); 
+--		
+--end component;
+
+ENTITY Extender_StateMachine IS
 PORT
-	(
-		clk				: IN std_logic;
-		reset				: IN std_logic;
-		extender_in		: IN std_logic;
-		extender_en		: IN std_logic;
-		state_input		: IN std_logic_vector(3 downto 0);
-		
-		extender_out	: OUT std_logic := '0';
-		clk_en 			: OUT std_logic;
-		left_right		: OUT std_logic;
-		grappler_en		: OUT std_logic
-	);
-END COMPONENT Extender_SS;
+(
+        clk_in, reset, extender_in, extender_en            : IN std_logic;
+        extender_out, grappler_en, clk_en, left_right    : OUT std_logic
+); 
+
+END ENTITY Extender_StateMachine;
+
+
+
 
 
 -- Component 4
@@ -111,14 +116,17 @@ end component Bidir_shift_reg;
 
 -- Component 5
 -- XY Motion
-COMPONENT XY_motion_final
+component XY_Motion_SM 
 PORT
 	(
-		clk_in, reset, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out	: IN std_logic;
-		up_down_X, up_down_Y, err, Capture_XY, extender_en	: OUT std_logic;
-		clk_en_X, clk_en_Y : OUT std_logic := '0'
+		clk_in : IN std_logic;
+		reset	 : IN std_logic := '0';
+		X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out	: IN std_logic;
+		clk_en_X, clk_en_Y, up_down_X, up_down_Y, err, CaptureXY, extender_en	: OUT std_logic
 	);
-END COMPONENT XY_motion_final;
+
+END component XY_Motion_SM;
+
 
 
 -- Component 6
@@ -130,7 +138,8 @@ PORT
 		RESET				: IN std_logic := '0';
 		CLK_EN			: IN std_logic := '0';
 		UP1_DOWN0		: IN std_logic := '0';
-		COUNTER_BITS	: OUT std_logic_vector(3 downto 0)
+		COUNTER_BITS	: OUT std_logic_vector(3 downto 0);
+		SIM_OUTPUTS    : OUT std_logic_vector(3 downto 0)
 	);
 END COMPONENT U_D_Bin_Counter4bit;
 
@@ -144,7 +153,8 @@ PORT
 		capture 		: IN std_logic := '0';
 		RESET			: IN std_logic := '0';
 		input_data 	: IN std_logic_vector(3 downto 0);
-		reg_bits 	: OUT std_logic_vector(3 downto 0)
+		reg_bits 	: OUT std_logic_vector(3 downto 0);
+		sim_output 	: OUT std_logic_vector(3 downto 0)
 	);
 END COMPONENT register_normal;
 
@@ -184,7 +194,7 @@ constant SIM_FLAG : boolean := TRUE; -- set to FALSE when compiling for FPGA dow
 signal clk_in, clock	: std_logic;
 
 -- Outputs: Inverter
-signal RESET 				: std_logic;
+signal RESET1 				: std_logic;
 signal motion 				: std_logic;
 signal extender_INPUT	: std_logic;
 signal grappler_INPUT	: std_logic;
@@ -202,7 +212,7 @@ signal ext_pos 		: std_logic_vector(3 downto 0);
 -- Outputs: Extender
 signal clk_en_reg4 	: std_logic;
 signal left_right 	: std_logic;
-signal extender_out 	: std_logic;
+signal extender_out1 	: std_logic;
 
 
 -- Inputs: Reg4
@@ -219,7 +229,7 @@ signal Y_GT : std_logic;
 signal Y_EQ : std_logic;
 signal Y_LT : std_logic;
 -- Outputs: XY Motion
-signal Capture_XY : std_logic;
+signal Capture_XY1 : std_logic;
 signal error 		: std_logic;
 
 
@@ -268,36 +278,40 @@ Y_target <= sw(3 downto 0);
 Clock_Selector		: Clock_source 		 PORT MAP (SIM_FLAG, clk_in, clock);
 
 -- Inverter
-Inverter1			: Inverter				 PORT MAP (pb_n(3), pb_n(2), pb_n(1), pb_n(0), RESET, motion, extender_INPUT, grappler_INPUT);
+Inverter1			: Inverter				 PORT MAP (pb_n(3), pb_n(2), pb_n(1), pb_n(0), RESET1, motion, extender_INPUT, grappler_INPUT);
+
 
 -- Extender
-Extender1			: Extender_SS			 PORT MAP (clock, RESET, extender_INPUT, extender_en, ext_pos, extender_out, clk_en_reg4, left_right, grappler_en);
+Extender1			: Extender_StateMachine			 PORT MAP (clock, RESET1, extender_INPUT, extender_en, extender_out1, grappler_en, clk_en_reg4, left_right);
 
 -- Reg4
-Reg4					: Bidir_shift_reg		 PORT MAP (clock, RESET, clk_en_reg4, left_right, ext_pos);
+Reg4					: Bidir_shift_reg		 PORT MAP (clock, RESET1, clk_en_reg4, left_right, ext_pos);
 
--- XY Motion
-XY_Motion1			: XY_motion_final		 PORT MAP (clock, RESET, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out,
-																	up_down_X, up_down_Y, error, Capture_XY, extender_en, clk_en_X, clk_en_Y);
-											 
--- Grappler
-Grappler1			: Grappler				 PORT MAP (clock, RESET, grappler_INPUT, grappler_en, grappler_on);
-
--- X Counter
-X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_X, up_down_X, X_pos);
--- X Register (Target X)
-X_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, X_target, X_reg);
-
--- Y Counter
-Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET, clk_en_Y, up_down_Y, Y_pos);
--- Y Register (Target Y)
-Y_register			: register_normal 	 PORT MAP (clock, Capture_XY, RESET, Y_target, Y_reg);
 
 -- X 4-Bit Comparator
 X_4bitComparator	: compx4 				 PORT MAP (X_pos, X_reg, X_GT, X_EQ, X_LT);
 
 -- Y 4-Bit Comparator
 Y_4bitComparator	: compx4 				 PORT MAP (Y_pos, Y_reg, Y_GT, Y_EQ, Y_LT);
+
+-- XY Motion
+XY_Motion1			: XY_Motion_SM		 PORT MAP (clock, RESET1, X_GT, X_EQ, X_LT, motion, Y_GT, Y_EQ, Y_LT, extender_out1,
+																	clk_en_X,clk_en_Y, up_down_X, up_down_Y, error, Capture_XY1, extender_en);
+											 
+-- Grappler
+Grappler1			: Grappler				 PORT MAP (clock, RESET1, grappler_INPUT, grappler_en, grappler_on);
+
+-- X Counter
+X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET1, clk_en_X, up_down_X, X_pos, xPOS);
+-- X Register (Target X)
+X_register			: register_normal 	 PORT MAP (clock, Capture_XY1, RESET1, X_target, X_reg,Xreg);
+
+-- Y Counter
+Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET1, clk_en_Y, up_down_Y, Y_pos, yPOS);
+-- Y Register (Target Y)
+Y_register			: register_normal 	 PORT MAP (clock, Capture_XY1, RESET1, Y_target, Y_reg, Yreg);
+
+
 
 -- X SevenSegment
 X_SevenSegment		: SevenSegment 		 PORT MAP (X_pos, X_sevenseg_out);
@@ -306,7 +320,7 @@ X_SevenSegment		: SevenSegment 		 PORT MAP (X_pos, X_sevenseg_out);
 Y_SevenSegment		: SevenSegment 		 PORT MAP (Y_pos, Y_sevenseg_out);
 
 -- Seven Segment Multiplexer
-SevenSegMux			: segment7_mux 		 PORT MAP (clk_in, X_sevenseg_out, Y_sevenseg_out, seg7_data, seg7_char1, seg7_char2);
+SevenSegMux			: segment7_mux 		 PORT MAP (clock, X_sevenseg_out, Y_sevenseg_out, seg7_data, seg7_char1, seg7_char2);
 -- _______________________________________________________________________________________________________
 
 
@@ -314,8 +328,6 @@ SevenSegMux			: segment7_mux 		 PORT MAP (clk_in, X_sevenseg_out, Y_sevenseg_out
 leds(5 downto 2) <= ext_pos;
 leds(0) <= error;
 leds(1) <= grappler_on;
-
-
 
 
 
