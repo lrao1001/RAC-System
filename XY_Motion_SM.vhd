@@ -22,6 +22,7 @@ ARCHITECTURE logic OF XY_Motion_SM IS
 -- BUTT_PRESS : motion is pressed
 -- BUTT_REL   : motion is released
 -- MOVING	  : counters are being incremented
+-- END STATE  : X_EQ and Y_EQ = 1, end position
 TYPE STATE_NAMES IS (BUTT_PRESS, BUTT_REL, MOVING, ERROR_STATE, ERROR_FLASH, END_STATE);
 
 signal current_state, next_state : STATE_NAMES;
@@ -70,7 +71,7 @@ BEGIN
 		
 		when MOVING =>
 			
-			-- if machine is at TargetXY, we move to BUTT_REL
+			-- if machine is at TargetXY, we move to END_STATE
 			if (X_EQ = '1' AND Y_EQ = '1') then
 				next_state <= END_STATE;
 			
@@ -113,6 +114,7 @@ BEGIN
 			
 			end if;
 		
+		-- we can only move out of END_STATE if motion is pressed (or RESET is pressed)
 		when END_STATE =>
 	
 			if (motion = '0') then
@@ -120,6 +122,8 @@ BEGIN
 			
 			else
 				next_state <= END_STATE;
+			
+			end if;
 	
 	END CASE;
 
@@ -199,6 +203,8 @@ BEGIN
 		err <= '0';
 		-- machine can now extend the extender
 		extender_en <= '1';
+		-- we cannot capture @ END_STATE, motion needs to be pressed first - and if motion IS pressed, then 
+		-- machine moves to state BUTT_PRESS, where CaptureXY depends on extender_out
 		CaptureXY <= '0';
 		
 	end if;
@@ -207,7 +213,3 @@ BEGIN
 END PROCESS;
 
 END;
-			
-			
-			
-			
