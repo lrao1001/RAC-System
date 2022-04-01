@@ -87,14 +87,14 @@ END COMPONENT Grappler;
 --		
 --end component;
 
-ENTITY Extender_StateMachine IS
+component Extender_StateMachine 
 PORT
 (
         clk_in, reset, extender_in, extender_en            : IN std_logic;
         extender_out, grappler_en, clk_en, left_right    : OUT std_logic
 ); 
 
-END ENTITY Extender_StateMachine;
+END component Extender_StateMachine;
 
 
 
@@ -138,8 +138,7 @@ PORT
 		RESET				: IN std_logic := '0';
 		CLK_EN			: IN std_logic := '0';
 		UP1_DOWN0		: IN std_logic := '0';
-		COUNTER_BITS	: OUT std_logic_vector(3 downto 0);
-		SIM_OUTPUTS    : OUT std_logic_vector(3 downto 0)
+		COUNTER_BITS	: OUT std_logic_vector(3 downto 0)
 	);
 END COMPONENT U_D_Bin_Counter4bit;
 
@@ -153,8 +152,7 @@ PORT
 		capture 		: IN std_logic := '0';
 		RESET			: IN std_logic := '0';
 		input_data 	: IN std_logic_vector(3 downto 0);
-		reg_bits 	: OUT std_logic_vector(3 downto 0);
-		sim_output 	: OUT std_logic_vector(3 downto 0)
+		reg_bits 	: OUT std_logic_vector(3 downto 0)
 	);
 END COMPONENT register_normal;
 
@@ -302,14 +300,14 @@ XY_Motion1			: XY_Motion_SM		 PORT MAP (clock, RESET1, X_GT, X_EQ, X_LT, motion,
 Grappler1			: Grappler				 PORT MAP (clock, RESET1, grappler_INPUT, grappler_en, grappler_on);
 
 -- X Counter
-X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET1, clk_en_X, up_down_X, X_pos, xPOS);
+X_counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET1, clk_en_X, up_down_X, X_pos);
 -- X Register (Target X)
-X_register			: register_normal 	 PORT MAP (clock, Capture_XY1, RESET1, X_target, X_reg,Xreg);
+X_register			: register_normal 	 PORT MAP (clock, Capture_XY1, RESET1, X_target, X_reg);
 
 -- Y Counter
-Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET1, clk_en_Y, up_down_Y, Y_pos, yPOS);
+Y_Counter			: U_D_Bin_Counter4bit PORT MAP (clock, RESET1, clk_en_Y, up_down_Y, Y_pos);
 -- Y Register (Target Y)
-Y_register			: register_normal 	 PORT MAP (clock, Capture_XY1, RESET1, Y_target, Y_reg, Yreg);
+Y_register			: register_normal 	 PORT MAP (clock, Capture_XY1, RESET1, Y_target, Y_reg);
 
 
 

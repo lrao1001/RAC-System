@@ -51,7 +51,7 @@ Transition_Section : PROCESS (current_state, X_GT, X_EQ, X_LT, motion, Y_GT, Y_E
 
 BEGIN
 
- CASE current_state IS
+	CASE current_state IS
 	
 		when BUTT_PRESS =>
 			
@@ -120,7 +120,7 @@ BEGIN
 			
 			else
 				next_state <= END_STATE;
-			end if;
+	
 	END CASE;
 
 END PROCESS;
