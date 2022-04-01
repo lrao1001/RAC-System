@@ -29,7 +29,8 @@ ARCHITECTURE logic OF Extender_StateMachine IS
 											--       pressed									 
 -- For the end, we also have two states: extender_out_press, extender_out_rel
 
-TYPE STATE_NAMES IS (EXTENDER_IN_REL, EXTENDER_IN_PRESS, S0, S1, S2, S3, EXTENDER_OUT_REL, EXTENDER_OUT_PRESS);
+TYPE STATE_NAMES IS (EXTENDER_IN_REL, EXTENDER_IN_PRESS, S0, S1, S2, S3,
+                     EXTENDER_OUT_REL, EXTEDER_OUT_PRESS);
 							
 SIGNAL current_state, next_state : STATE_NAMES;
 SIGNAL forward : std_logic;
@@ -147,7 +148,7 @@ CASE current_state IS
 		
 		-- checking if the extender_in goes low, if yes, then we move backwards
 		if (extender_en = '1' AND extender_in = '0') then
-			next_state <= S3;
+			next_state <= S4;
 		
 		-- if extender_en goes low, just move back to EXTENDER_OUT_REL, because we are not allowed to
 		-- extend
