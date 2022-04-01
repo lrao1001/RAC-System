@@ -48,7 +48,7 @@ BEGIN
 	
 		when START =>
 		
-			if (NOT(motion) AND  ) then
+			if (motion = '0' AND (X_EQ = '0' OR Y_EQ= '0')  ) then
 				next_state <= MOVING;
 			
 			elsif (motion = '0' AND X_EQ = '1' AND Y_EQ = '1') then
